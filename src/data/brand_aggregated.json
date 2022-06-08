@@ -1,0 +1,77 @@
+{
+    "weight": {
+        "best": 0,
+        "worst": 9,
+        "mean": 1
+    },
+    "ETEC_ratio": {
+        "best": 0,
+        "worst": 9,
+        "mean": 5
+    },
+    "recycled_plastics": {
+        "best": 1,
+        "worst": 7,
+        "mean": 2
+    },
+    "recycled_materials": {
+        "best": 4,
+        "worst": 7,
+        "mean": 5
+    },
+    "PCF_availability": {
+        "best": 1,
+        "worst": 3,
+        "mean": 1
+    },
+    "warranty_period": {
+        "best": 5,
+        "worst": 7,
+        "mean": 5
+    },
+    "extended_warranty": {
+        "best": 6,
+        "worst": 7,
+        "mean": 6
+    },
+    "public_repair_policy": {
+        "best": 3,
+        "worst": 3,
+        "mean": 3
+    },
+    "fasteners_and_connectors": {
+        "best": 1,
+        "worst": 1,
+        "mean": 1
+    },
+    "tools_repair_upgrade": {
+        "best": 1,
+        "worst": 1,
+        "mean": 1
+    },
+    "availability_spareparts": {
+        "best": 4,
+        "worst": 4,
+        "mean": 4
+    },
+    "duration_availability": {
+        "best": 4,
+        "worst": 4,
+        "mean": 4
+    },
+    "comprehensive_information": {
+        "best": 2,
+        "worst": 3,
+        "mean": 3
+    },
+    "multi_stakeholder_initiative": {
+        "best": 1,
+        "worst": 1,
+        "mean": 1
+    },
+    "compensated_manufactured_ratio": {
+        "best": 7,
+        "worst": 7,
+        "mean": 7
+    }
+}
