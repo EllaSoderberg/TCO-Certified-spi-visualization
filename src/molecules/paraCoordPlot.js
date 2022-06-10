@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import * as d3 from 'd3';
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import Table from "./table";
+import Legend from "./legend";
 
 export default function ParaCoords(props) {
     //Set states
@@ -29,6 +30,8 @@ export default function ParaCoords(props) {
     height = height / 2 - margin.top - margin.bottom;
     let selectedColor = "#33a02c"
     let unselectedColor = "#b2df8a"
+    let hightlightColor = "#dc2626"
+    let inactiveColor = "#a3a3a3"
     let brushWidth = 20
     const axisSpacing = width / axisNames.current.length;
     let labelMap = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F", 7: "G" }
@@ -40,7 +43,7 @@ export default function ParaCoords(props) {
             if (name === "weight") {
                 yTemp.set(name, d3.scaleLinear().domain([spi[name].MAX, 1]).range([margin.top, height - margin.bottom]))
             } else if (name === "ETEC_ratio") {
-                yTemp.set(name, d3.scaleLinear().domain([0, spi[name].MAX]).range([margin.top, height - margin.bottom]))
+                yTemp.set(name, d3.scaleLinear().domain([0.59, spi[name].MAX]).range([margin.top, height - margin.bottom]))
             } else {
                 yTemp.set(name, d3.scaleLinear().domain([1, spi[name].NC]).range([margin.top, height - margin.bottom]))
             }
@@ -86,7 +89,8 @@ export default function ParaCoords(props) {
                     .attr("class", "xMiniScale")
                     .attr("transform", `translate(${x(axis)}, ${height - margin.bottom + 5})`)
                     .call(d3.axisBottom(xMini)
-                        .ticks(2))
+                        .ticks(2)
+                        .tickFormat((tick) => { if (tick === 100) { return tick + "%" } else return tick }))
             });
         }
 
@@ -113,7 +117,8 @@ export default function ParaCoords(props) {
                 [-(brushWidth / 2), margin.top],
                 [brushWidth / 2, height - margin.bottom]
             ])
-            .on("start brush end", brushed);
+            .on("start brush end", brushed)
+            .on("click", b => b.clear());
 
         x = d3.scalePoint()
             .domain(axisNames.current)
@@ -126,18 +131,15 @@ export default function ParaCoords(props) {
             .y(([axisName, value]) => y.get(axisName)(value));
 
         let inactivePaths = svg.append("g")
-        if (showInactive) {
-            inactivePaths
-                .attr("class", "path")
-                .attr("fill", "none")
-                .attr("stroke-width", 1.5)
-                .attr("stroke-opacity", 0.4)
-                .selectAll("path")
-                .data(data.filter((data) => data.brand !== 4))
-                .join("path")
-                .attr("stroke", "gray")
-                .attr("d", d => line(d3.cross(axisNames.current, [d], (axisName, d) => [axisName, d[axisName]])));
-        }
+            .attr("class", "path")
+            .attr("fill", "none")
+            .attr("stroke-width", 1.5)
+            .attr("stroke-opacity", 0.4)
+            .selectAll("path")
+            .data(data.filter((data) => data.brand !== 4))
+            .join("path")
+            .attr("stroke", inactiveColor)
+            .attr("d", d => line(d3.cross(axisNames.current, [d], (axisName, d) => [axisName, d[axisName]])));
 
         // draw lines 
         let path = svg.append("g")
@@ -177,16 +179,15 @@ export default function ParaCoords(props) {
             //Function to each a title text to each axis
             .call(g => g.append("text")
                 .attr("class", "axisText")
-                .attr("y", 25)
-                .attr("x", 0)
-                .attr("text-anchor", 'middle')
+                .attr("y", 20)
+                .attr("x", 17)
+                .attr("text-anchor", 'end')
                 .attr("font-weight", "bold")
                 .attr("fill", '#000')
-                //.attr("textLength", 50)
                 //.attr("transform", `rotate(-10)`)
                 .style("cursor", "move")
                 .text(d => spi[d].SPINAMESHORT)
-                .call(wrap, 120)
+                .call(wrap, 100)
                 //For each title text, a drag function is attached
                 .call(d3.drag()
                     .on("start", function (event, name) {
@@ -212,8 +213,9 @@ export default function ParaCoords(props) {
                         g.attr("transform", axis => "translate(" + position(axis) + ")");
                         //Move the paths (both active and inactive) with the arrow
                         path.attr("d", data => stretch(d3.cross(axisNames.current, [data], (axisName, d) => [axisName, d[axisName]])));
-                        if (showInactive) { inactivePaths.attr("d", data => stretch(d3.cross(axisNames.current, [data], (axisName, d) => [axisName, d[axisName]]))) };
+                        inactivePaths.attr("d", data => stretch(d3.cross(axisNames.current, [data], (axisName, d) => [axisName, d[axisName]])));
                         //Move the bars with the arrow
+                        console.log(rectangles)
                         axisNames.current.forEach(axis => rectangles.get(axis).attr("x", position(axis)));
 
                     })
@@ -223,14 +225,21 @@ export default function ParaCoords(props) {
                         //Move the axis to the final position, with animation
                         transition(g).attr("transform", axis => "translate(" + x(axis) + ")");
                         //Move paths to the final position, with animation
-                        if (showInactive) { transition(inactivePaths).attr("d", d => line(d3.cross(axisNames.current, [d], (axisName, d) => [axisName, d[axisName]]))) };
-                        transition(path).attr("d", d => line(d3.cross(axisNames.current, [d], (axisName, d) => [axisName, d[axisName]])))
+                        transition(path).attr("d", d => line(d3.cross(axisNames.current, [d], (axisName, d) => [axisName, d[axisName]])));
+                        transition(inactivePaths).attr("d", d => line(d3.cross(axisNames.current, [d], (axisName, d) => [axisName, d[axisName]])));
                         //Move bars to the final position, with animation
                         axisNames.current.forEach(axis => transition(rectangles.get(axis)).attr("x", x(axis)));
 
                     })
                     //Ensures that drag is relative to the whole container
                     .container(g))
+                .append("tspan")
+                .attr("y", 25)
+                .attr("x", 35)
+                .style("cursor", "help")
+                .attr('font-family', 'FontAwesome')
+                .attr('font-size', '15px')
+                .text(d => "\uf05a")
                 .on('click', (event, name) => props.toggle(name))
             )
             //Add another text element that creates a white background behind the black text
@@ -363,15 +372,14 @@ export default function ParaCoords(props) {
             .x(([axisName]) => x(axisName))
             .y(([axisName, value]) => y.get(axisName)(value));
 
-        svg.append("g")
-            .attr("class", "highlightedpath")
+        svg.attr("class", "highlightedpath")
             .attr("fill", "none")
             .attr("stroke-width", 2)
             .attr("stroke-opacity", 1)
             .selectAll("path")
             .data(data.filter((data) => data.modelname === highlightedPath))
             .join("path")
-            .attr("stroke", "red")
+            .attr("stroke", hightlightColor)
             .attr("d", d => line(d3.cross(axisNames.current, [d], (axisName, d) => [axisName, d[axisName]])));
 
         d3.select(".highlightedpath").raise()
@@ -384,14 +392,18 @@ export default function ParaCoords(props) {
             <svg ref={svgRef} width={width} height={height}>
                 <g className="container" />
             </svg>
-            <div className="flex flex-row justify-evenly">
-                <div className="text-center w-1/2">There are a total of {data.length} certified displays. Your brand has {data.filter((data) => data.brand === 4).length} certified displays. {selectedData.length} models are highlighted and shown in the table.</div>
-                {/*<button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={e => { setShowInactive(!showInactive); console.log(showInactive) }}>Show all models</button>*/}
-                <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={e =>  setShowBars(!showBars)}>{showBars ? "Hide" : "Show"} distributions</button>
-                <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={e => { setRerender(!rerender); brushSelections.current.clear(); setSelectedData([]); }}>Reset filters</button>
-            </div>
-            <div className="flex justify-center">
-                <Table data={selectedData} onSelect={modelname => setHighlightedPath(modelname)} />
+
+            <div className="flex flex-row justify-center" style={{ height: height }}>
+                <Table data={selectedData} selectionsActive={brushSelections.current.size} onSelect={modelname => setHighlightedPath(modelname)} />
+                <div className="flex flex-row h-fit p-5">
+                    <Legend colors={{ unselectedColor, selectedColor, inactiveColor, hightlightColor }} data={data} selectedData={selectedData} />
+                    {/*<button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={e => { setShowInactive(!showInactive); console.log(showInactive) }}>Show all models</button>*/}
+                    <div className="flex flex-col">
+                        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border border-gray-400 rounded shadow w-fit text-sm" onClick={e => props.toggleInfo()}>About</button>
+                        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border border-gray-400 rounded shadow w-fit text-sm" onClick={e => setShowBars(!showBars)}>{showBars ? "Hide" : "Show"} distributions</button>
+                        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border border-gray-400 rounded shadow w-fit text-sm" onClick={e => { setRerender(!rerender); brushSelections.current.clear(); setSelectedData([]); }}>Reset filters</button>
+                    </div>
+                </div>
             </div>
         </div>
 

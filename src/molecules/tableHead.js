@@ -15,19 +15,28 @@ export default function TableHead(props) {
     };
 
     return (
-        <thead className="text-gray-700 text-xs uppercase bg-gray-50">
+        <thead className="text-gray-700 text-xs uppercase bg-gray-50 sticky top-0">
             <tr>
                 {props.columns.map(({ label, accessor, sortable }) => {
-                    return <th className="px-6 py-3 text-center cursor-pointer relative" scope="col" key={accessor} onClick={sortable ? () => handleSortingChange(accessor) : null}>
-                        {label}<span className="absolute p-1 top-0">
-                    {sortable
-                        ? sortField && sortField === accessor && order === "asc"
-                         ? <AiOutlineUpSquare/>
-                         : sortField && sortField === accessor && order === "desc"
-                         ? <AiOutlineDownSquare/>
-                         : <AiOutlineUpSquare/>
-                        : <AiOutlineUpSquare/>}</span></th>;
-                })}
+                    return (
+                        <th
+                            className="px-6 py-3 text-center cursor-pointer relative"
+                            scope="col"
+                            key={accessor}
+                            onClick={sortable ? () => handleSortingChange(accessor) : null}>
+                            {label}
+                            {accessor !== "checkbox" ?
+                                <span className="absolute pt-2 px-1 top-1.5">
+                                    {sortable
+                                        ? sortField && sortField === accessor && order === "asc"
+                                            ? <AiOutlineUpSquare />
+                                            : sortField && sortField === accessor && order === "desc"
+                                                ? <AiOutlineDownSquare />
+                                                : <AiOutlineUpSquare />
+                                        : <AiOutlineUpSquare />}
+                                </span> : ""}
+                        </th>
+                    )})}
             </tr>
         </thead>
     );

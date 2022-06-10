@@ -8,11 +8,11 @@ export default function Table(props) {
 
     useEffect(() => {
         if (props.data.length === 0) {
-            setTableData(productData.filter((data) => data.brand === 4));
+            props.selectionsActive ? setTableData([]) : setTableData(productData.filter((data) => data.brand === 4));
         } else {
             setTableData(props.data);
-        }
-    }, [props.data]);
+        } 
+        }, [props.data]);
 
     const handleSorting = (sortField, sortOrder) => {
         if (sortField) {
@@ -31,6 +31,7 @@ export default function Table(props) {
        };
 
     const columns = [
+        { label: "Pin row", accessor: "checkbox", sortable: false },
         { label: "Model name", accessor: "modelname", sortable: true },
         { label: "Sales name", accessor: "salesname", sortable: true },
         { label: "Certificate number", accessor: "certnumber", sortable: true },
