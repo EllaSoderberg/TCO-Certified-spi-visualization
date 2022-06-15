@@ -28,10 +28,11 @@ export default function ParaCoords(props) {
     let { height, width } = useWindowDimensions();
     width = width - margin.right;
     height = height / 2 - margin.top - margin.bottom;
-    let selectedColor = "#33a02c"
-    let unselectedColor = "#b2df8a"
-    let hightlightColor = "#dc2626"
+    let selectedColor = "#179047"
+    let unselectedColor = "#88cb95"
+    let hightlightColor = "#e2a2c3"
     let inactiveColor = "#a3a3a3"
+    let barsColor = "#cfc9db"
     let brushWidth = 20
     const axisSpacing = width / axisNames.current.length;
     let labelMap = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F", 7: "G" }
@@ -83,7 +84,7 @@ export default function ParaCoords(props) {
                     .attr("y", key => y.get(axis)(key) - 5)
                     .attr("width", (key, i) => xMini(values[i]))
                     .attr("height", 10)
-                    .attr("fill", "lightgray"));
+                    .attr("fill", barsColor));
                 svg
                     .append("g")
                     .attr("class", "xMiniScale")
@@ -118,7 +119,6 @@ export default function ParaCoords(props) {
                 [brushWidth / 2, height - margin.bottom]
             ])
             .on("start brush end", brushed)
-            .on("click", b => b.clear());
 
         x = d3.scalePoint()
             .domain(axisNames.current)
@@ -251,7 +251,7 @@ export default function ParaCoords(props) {
                 .attr("stroke-linejoin", "round")
                 .attr("stroke", "white"))
             //Add brushing functionality to each axis
-            .call(brush);
+            .call(brush)
 
         //Helper functions for drag
         function position(d) {
@@ -275,7 +275,7 @@ export default function ParaCoords(props) {
                 let active = Array.from(brushSelections.current).every(([axisName, [min, max]]) => axisName === "weight" ? d[axisName] <= min && d[axisName] >= max : d[axisName] >= min && d[axisName] <= max);
                 d3.select(this)
                     .style("stroke", active ? selectedColor : unselectedColor)
-                    .style("stroke-opacity", active ? 1 : 0.4);
+                    .style("stroke-opacity", active ? 0.6 : 0.4);
                 if (active) {
                     d3.select(this).raise();
                     selected.push(d);
@@ -374,7 +374,7 @@ export default function ParaCoords(props) {
 
         svg.attr("class", "highlightedpath")
             .attr("fill", "none")
-            .attr("stroke-width", 2)
+            .attr("stroke-width", 2.5)
             .attr("stroke-opacity", 1)
             .selectAll("path")
             .data(data.filter((data) => data.modelname === highlightedPath))
@@ -395,14 +395,13 @@ export default function ParaCoords(props) {
 
             <div className="flex flex-row justify-center" style={{ height: height }}>
                 <Table data={selectedData} selectionsActive={brushSelections.current.size} onSelect={modelname => setHighlightedPath(modelname)} />
-                <div className="flex flex-row h-fit p-5">
-                    <Legend colors={{ unselectedColor, selectedColor, inactiveColor, hightlightColor }} data={data} selectedData={selectedData} />
+                <div className="flex flex-col h-fit p-5">
                     {/*<button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={e => { setShowInactive(!showInactive); console.log(showInactive) }}>Show all models</button>*/}
-                    <div className="flex flex-col">
-                        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border border-gray-400 rounded shadow w-fit text-sm" onClick={e => props.toggleInfo()}>About</button>
-                        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border border-gray-400 rounded shadow w-fit text-sm" onClick={e => setShowBars(!showBars)}>{showBars ? "Hide" : "Show"} distributions</button>
+                    <div className="flex flex-row">
                         <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border border-gray-400 rounded shadow w-fit text-sm" onClick={e => { setRerender(!rerender); brushSelections.current.clear(); setSelectedData([]); }}>Reset filters</button>
+                        <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border border-gray-400 rounded shadow w-fit text-sm" onClick={e => setShowBars(!showBars)}>{showBars ? "Hide" : "Show"} distributions</button>
                     </div>
+                    <Legend colors={{ unselectedColor, selectedColor, inactiveColor, hightlightColor, barsColor }} data={data} selectedData={selectedData} />
                 </div>
             </div>
         </div>

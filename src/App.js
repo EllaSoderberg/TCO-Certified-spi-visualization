@@ -40,11 +40,14 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        <div className='text-4xl text-center p-6'>Sustainability Performance Indicator visualization</div>
-       <ParaCoordPlot productData={productdata} spiData={spidict} productLabels={productdatalabels} productAgg={productAgg} toggle={this.togglePop} toggleInfo={this.toggleInfoPop}></ParaCoordPlot>
-       {this.state.popup ? <SpiInfoPopup spiData={spidict[this.state.popupSpi]} toggle={this.togglePop} /> : null}
-       {this.state.infoPopup ? <InfoPopup toggle={this.toggleInfoPop} /> : null}
-       <div className="flex justify-center fixed bottom-0 w-11/12 h-10 rounded-md m-4 shadow-md -z-10">Developed in 2022 by Ella Söderberg for TCO Development. Find me on&nbsp;<a href="https://github.com/EllaSoderberg" target="_blank" rel="noreferrer">Github</a>&nbsp;or&nbsp;<a href="https://www.linkedin.com/in/ella-s%C3%B6derberg/" target="_blank" rel="noreferrer">LinkedIn</a>.</div>
+        <div className='flex flex-row justify-center'>
+          <div className='text-4xl text-center p-6'>Sustainability Performance Indicator visualization</div>
+          <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border h-fit border-gray-400 rounded shadow w-fit text-sm self-center" onClick={e => this.toggleInfoPop()}>About</button>
+        </div>
+        <ParaCoordPlot productData={productdata} spiData={spidict} productLabels={productdatalabels} productAgg={productAgg} toggle={this.togglePop} toggleInfo={this.toggleInfoPop}></ParaCoordPlot>
+        {this.state.popup ? <SpiInfoPopup spiData={spidict[this.state.popupSpi]} toggle={this.togglePop} /> : null}
+        {this.state.infoPopup ? <InfoPopup toggle={this.toggleInfoPop} /> : null}
+        <div className="flex justify-center fixed bottom-0 w-11/12 h-10 rounded-md m-4 shadow-md -z-10">Developed in 2022 by Ella Söderberg for TCO Development. Find me on&nbsp;<a href="https://github.com/EllaSoderberg" target="_blank" rel="noreferrer">Github</a>&nbsp;or&nbsp;<a href="https://www.linkedin.com/in/ella-s%C3%B6derberg/" target="_blank" rel="noreferrer">LinkedIn</a>.</div>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 export default function Legend({ colors, data, selectedData }) {
     return (
         <div className="shadow-md p-5">
-            <div>Total products shown: {data.length}</div>
+            <div className="pb-2">Total products shown: {data.length}</div>
             <div className="flex flex-row">
                 <div className="w-14 h-1 m-3 self-center " style={{ backgroundColor: colors.inactiveColor }}></div>
                 <div>Products of other brands ({data.filter((data) => data.brand !== 4).length})</div>
@@ -17,6 +17,10 @@ export default function Legend({ colors, data, selectedData }) {
             <div className="flex flex-row">
                 <div className="w-14 h-1 m-3 self-center" style={{ backgroundColor: colors.hightlightColor }}></div>
                 <div>Highlighted product</div>
+            </div>
+            <div className="flex flex-row">
+                <div className="w-14 h-2.5 m-0 mx-3 self-center" style={{ backgroundColor: colors.barsColor }}></div>
+                <div>Distribution of products</div>
             </div>
         </div>
 

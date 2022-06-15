@@ -31,18 +31,20 @@ export default function Table(props) {
        };
 
     const columns = [
-        { label: "Pin row", accessor: "checkbox", sortable: false },
         { label: "Model name", accessor: "modelname", sortable: true },
         { label: "Sales name", accessor: "salesname", sortable: true },
         { label: "Certificate number", accessor: "certnumber", sortable: true },
-        { label: "Product weight", accessor: "weight", sortable: true },
+        { label: "Product weight (kg)", accessor: "weight", sortable: true },
         { label: "Size (inches)", accessor: "Size", sortable: true },
         { label: "Aspect ratio", accessor: "aspectratio", sortable: true },
+        { label: "Resolution width", accessor: "resolutionwidth", sortable: true },
+        { label: "Resolution height", accessor: "resolutionheight", sortable: true },
+
+
+        /*
         { label: "Stand", accessor: "stand", sortable: true },
         { label: "Optional stand", accessor: "optionalstand", sortable: true },
-       
-
-        /*{ label: "Recycled plastics", accessor: "recycled_plastics", sortable: true },
+        { label: "Recycled plastics", accessor: "recycled_plastics", sortable: true },
         { label: "Recycled materials", accessor: "recycled_materials", sortable: true },
         { label: "PCF availability", accessor: "PCF_availability", sortable: true },
         { label: "ETEC ratio", accessor: "ETEC_ratio", sortable: true },
