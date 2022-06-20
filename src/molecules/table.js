@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import TableBody from "./tableBody";
 import TableHead from "./tableHead";
 import productData from "../data/productdata.json"
+import { sort } from "d3";
 
 export default function Table(props) {
     const [tableData, setTableData] = useState(productData);
@@ -11,34 +12,40 @@ export default function Table(props) {
             props.selectionsActive ? setTableData([]) : setTableData(productData.filter((data) => data.brand === 4));
         } else {
             setTableData(props.data);
-        } 
-        }, [props.data]);
+        }
+    }, [props.data]);
 
-    const handleSorting = (sortField, sortOrder) => {
+    const handleSorting = (sortField, sortOrder, type) => {
         if (sortField) {
-            const sorted = [...tableData].sort((a, b) => {
-             if (a[sortField] === null) return 1;
-             if (b[sortField] === null) return -1;
-             if (a[sortField] === null && b[sortField] === null) return 0;
-             return (
-              a[sortField].toString().localeCompare(b[sortField].toString(), "en", {
-               numeric: true,
-              }) * (sortOrder === "asc" ? 1 : -1)
-             );
-            });
+            let sorted = [];
+            if (type === "string") {
+                sorted = [...tableData].sort((a, b) => {
+                    if (a[sortField] === null) return 1;
+                    if (b[sortField] === null) return -1;
+                    if (a[sortField] === null && b[sortField] === null) return 0;
+                    return (
+                        //parseFloat(a[sortField]).localeCompare(parseFloat(b[sortField]))
+                        a[sortField].toString().localeCompare(b[sortField].toString(), "en", {
+                            numeric: true,
+                        }) * (sortOrder === "asc" ? 1 : -1)
+                    );
+                });
+            } else {
+                sorted = sortOrder === "asc" ? [...tableData].sort(function (a, b) { console.log(parseFloat(a[sortField])); return parseFloat(a[sortField]) - parseFloat(b[sortField]) }) : [...tableData].sort(function (a, b) { return parseFloat(b[sortField]) - parseFloat(a[sortField]) });
+            }
             setTableData(sorted);
-           }
-       };
+        }
+    };
 
     const columns = [
-        { label: "Model name", accessor: "modelname", sortable: true },
-        { label: "Sales name", accessor: "salesname", sortable: true },
-        { label: "Certificate number", accessor: "certnumber", sortable: true },
-        { label: "Product weight (kg)", accessor: "weight", sortable: true },
-        { label: "Size (inches)", accessor: "Size", sortable: true },
-        { label: "Aspect ratio", accessor: "aspectratio", sortable: true },
-        { label: "Resolution width", accessor: "resolutionwidth", sortable: true },
-        { label: "Resolution height", accessor: "resolutionheight", sortable: true },
+        { label: "Model name", accessor: "modelname", sortable: true, type: "string" },
+        { label: "Sales name", accessor: "salesname", sortable: true, type: "string" },
+        { label: "Certificate number", accessor: "certnumber", sortable: true, type: "string" },
+        { label: "Product weight (kg)", accessor: "weight", sortable: true, type: "float" },
+        { label: "Size (inches)", accessor: "Size", sortable: true, type: "float" },
+        { label: "Aspect ratio", accessor: "aspectratio", sortable: true, type: "string" },
+        { label: "Resolution width", accessor: "resolutionwidth", sortable: true, type: "float" },
+        { label: "Resolution height", accessor: "resolutionheight", sortable: true, type: "float" },
 
 
         /*
@@ -80,15 +87,15 @@ export default function Table(props) {
     TCO_Certified_logo_option: "B"
     resolutionheight: 1080
     resolutionwidth: 1920*/
-   
+
     return (
         <div className="relative overflow-x-auto shadow-md max-w-7xl">
             <table className="w-full text-sm text-left text-gray-500">
                 <caption className="italic mb-2">
-                    Columns are sortable. 
+                    Columns are sortable.
                 </caption>
-                <TableHead columns={columns} handleSorting={handleSorting}/>
-                <TableBody columns={columns} tableData={tableData} onSelect={modelname => props.onSelect(modelname)}/>
+                <TableHead columns={columns} handleSorting={handleSorting} />
+                <TableBody columns={columns} tableData={tableData} onSelect={modelname => props.onSelect(modelname)} />
             </table>
         </div>
     );

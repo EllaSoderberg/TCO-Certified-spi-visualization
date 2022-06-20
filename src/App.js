@@ -47,7 +47,7 @@ export default class App extends React.Component {
         <ParaCoordPlot productData={productdata} spiData={spidict} productLabels={productdatalabels} productAgg={productAgg} toggle={this.togglePop} toggleInfo={this.toggleInfoPop}></ParaCoordPlot>
         {this.state.popup ? <SpiInfoPopup spiData={spidict[this.state.popupSpi]} toggle={this.togglePop} /> : null}
         {this.state.infoPopup ? <InfoPopup toggle={this.toggleInfoPop} /> : null}
-        <div className="flex justify-center fixed bottom-0 w-11/12 h-10 rounded-md m-4 shadow-md -z-10">Developed in 2022 by Ella Söderberg for TCO Development. Find me on&nbsp;<a href="https://github.com/EllaSoderberg" target="_blank" rel="noreferrer">Github</a>&nbsp;or&nbsp;<a href="https://www.linkedin.com/in/ella-s%C3%B6derberg/" target="_blank" rel="noreferrer">LinkedIn</a>.</div>
+        <div className="fixed bottom-0 w-full text-center h-10 rounded-md my-2 shadow-md -z-10">Developed in 2022 by Ella Söderberg for TCO Development. Find me on&nbsp;<a href="https://github.com/EllaSoderberg" target="_blank" rel="noreferrer">Github</a>&nbsp;or&nbsp;<a href="https://www.linkedin.com/in/ella-s%C3%B6derberg/" target="_blank" rel="noreferrer">LinkedIn</a>.</div>
       </div>
     );
   }

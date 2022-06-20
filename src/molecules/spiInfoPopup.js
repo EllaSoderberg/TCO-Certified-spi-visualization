@@ -15,7 +15,6 @@ export default class SpiInfoPopup extends Component {
     render() {
         let typeDescription = { "Y": "Always collected during product/testing/verification/application process", "X": "blabla" }
         let spi = this.props.spiData;
-        console.log(spi);
 
         let keys = Object.keys(spi.CLASSDEF);
         let values = Object.values(spi.CLASSDEF);
