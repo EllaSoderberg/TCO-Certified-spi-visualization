@@ -42,7 +42,7 @@ export default class App extends React.Component {
       <div>
         <div className='flex flex-row justify-center'>
           <div className='text-4xl text-center p-6'>Sustainability Performance Indicator visualization</div>
-          <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border h-fit border-gray-400 rounded shadow w-fit text-sm self-center" onClick={e => this.toggleInfoPop()}>About</button>
+          <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold m-2 py-2 px-4 border h-fit border-gray-400 rounded shadow w-fit text-sm self-center" onClick={e => this.toggleInfoPop()}>Help</button>
         </div>
         <ParaCoordPlot productData={productdata} spiData={spidict} productLabels={productdatalabels} productAgg={productAgg} toggle={this.togglePop} toggleInfo={this.toggleInfoPop}></ParaCoordPlot>
         {this.state.popup ? <SpiInfoPopup spiData={spidict[this.state.popupSpi]} toggle={this.togglePop} /> : null}

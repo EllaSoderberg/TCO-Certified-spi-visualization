@@ -33,7 +33,7 @@ export default function ParaCoords(props) {
     let hightlightColor = "#e2a2c3"
     let inactiveColor = "#a3a3a3"
     let barsColor = "#cfc9db"
-    let brushWidth = 20
+    let brushWidth = 30
     const axisSpacing = width / axisNames.current.length;
     let labelMap = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F", 7: "G" }
 

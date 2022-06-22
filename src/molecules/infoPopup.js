@@ -23,7 +23,7 @@ export default class InfoPopup extends Component {
                 <div className="fixed w-full h-full top-0 left-0 bg-black opacity-40" onClick={this.handleClick}></div>
                 <div className="absolute w-2/3 bg-white top-8 p-8">
                     <div className="flex justify-between">
-                        <div className="text-4xl p-6">About</div>
+                        <div className="text-4xl p-6">Getting started</div>
                         <XButton handleClick={this.handleClick} />
                     </div>
 
